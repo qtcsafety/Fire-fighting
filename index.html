@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>สแกนอุปกรณ์</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    body { font-family: 'Kanit', sans-serif; margin: 0; padding: 20px; background: #2c3e50; color: #fff; text-align: center; }
+    #reader { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 16px; overflow: hidden; background: #000; border: 4px solid #e74c3c; }
+    .title { margin-bottom: 20px; font-size: 18px; color: #ecf0f1; }
+    .btn-cancel { margin-top: 30px; padding: 12px 24px; background: #95a5a6; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="title">📷 เล็งกล้องไปที่ QR Code</div>
+  <div id="reader"></div>
+  <button class="btn-cancel" onclick="goBack()">← ยกเลิกและกลับระบบหลัก</button>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnUrl = urlParams.get('returnUrl');
+
+    function goBack() {
+      if (returnUrl) window.location.href = returnUrl;
+    }
+
+    function extractTag(text){
+      try{
+        const url = new URL(text);
+        const data = url.searchParams.get('data');
+        if(data) return data;
+      }catch(e){}
+      return text;
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" }, // ใช้กล้องหลัง
+      { fps: 10, qrbox: { width: 220, height: 220 } },
+      (decodedText) => {
+        html5QrCode.stop().then(() => {
+          const tag = extractTag(decodedText);
+          if (returnUrl) {
+            // โยนค่ากลับไปยัง Google Apps Script
+            window.location.href = returnUrl + "?scan=" + encodeURIComponent(tag);
+          } else {
+            alert("สแกนได้: " + tag);
+          }
+        });
+      },
+      (err) => {} // ข้าม error ตอนที่ยังหา QR ไม่เจอ
+    ).catch((err) => {
+      alert("ไม่สามารถเปิดกล้องได้ กรุณาตรวจสอบสิทธิ์การเข้าถึง");
+    });
+  </script>
+</body>
+</html>
