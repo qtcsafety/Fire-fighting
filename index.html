@@ -1,13 +1,35 @@
-<!DOCTYPE html> 
-<html lang="th"> 
-<head> 
-<base target="_top"> 
-<meta charset="UTF-8"> 
-<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-<title>ตรวจอุปกรณ์ป้องกันอัคคีภัย</title> 
-</head> 
-<body> 
-<iframe style="width: 100%; height: 100vh;" scrolling="yes" src="https://script.google.com/macros/s/AKfycbyS2WktlKeNXH7ogqRA6cZ6ITXm2AhEP4xM1PbuBXGlzFQQWMzo-w0XYq4DAQ3rUjMk/exec" frameborder="0"></iframe> 
-</body> 
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตรวจอุปกรณ์ป้องกันอัคคีภัย</title>
+</head>
+<body style="margin:0;">
+<!-- URL เว็บแอป Google Apps Script จริง (Deploy > Manage deployments > คัดลอก "Web app" URL ต้องลงท้าย /exec) -->
+<script>
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyS2WktlKeNXH7ogqRA6cZ6ITXm2AhEP4xM1PbuBXGlzFQQWMzo-w0XYq4DAQ3rUjMk/exec";
+
+  /* หน้านี้คือ "หน้ากลาง" บน GitHub Pages (https://qtcsafety.github.io/Fire-fighting/)
+   * เมื่อผู้ใช้สแกน QR เสร็จที่ scanner.html แล้วเบราว์เซอร์จะพากลับมาที่หน้านี้พร้อม
+   * ?scanTag=TAG ต่อท้าย (ดู WEBAPP_URL ใน Index.html ของ Code.gs) — สคริปต์นี้จะอ่านค่า
+   * scanTag จาก URL ของหน้าตัวเอง แล้วต่อเข้าไปใน src ของ iframe ที่ชี้ไปเว็บแอป Apps
+   * Script จริง ให้ doGet(e) ฝั่งเซิร์ฟเวอร์อ่าน e.parameter.scanTag ได้ตามปกติ
+   * (ถ้าไม่ทำแบบนี้ ค่า ?scanTag=... จะค้างอยู่ที่ URL ของ GitHub Pages เฉย ๆ
+   * ไม่ถูกส่งต่อเข้า iframe เลย) */
+  var params = new URLSearchParams(location.search);
+  var scanTag = params.get('scanTag');
+  var iframeSrc = APPS_SCRIPT_URL + (scanTag ? '?scanTag=' + encodeURIComponent(scanTag) : '');
+
+  var iframe = document.createElement('iframe');
+  iframe.style.width = '100%';
+  iframe.style.height = '100vh';
+  iframe.style.border = '0';
+  iframe.scrolling = 'yes';
+  iframe.src = iframeSrc;
+  document.body.appendChild(iframe);
+</script>
+</body>
 </html>
