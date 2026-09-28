@@ -6,6 +6,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ตรวจอุปกรณ์ป้องกันอัคคีภัย</title>
+
+<!-- ===== โลโก้ที่แถบเบราว์เซอร์ + ไอคอนหน้าจอโฮม =====
+     ต้องอัปโหลดไฟล์เหล่านี้ไว้โฟลเดอร์เดียวกับ index.html:
+     favicon-32.png, icon-180.png, icon-192.png, icon-512.png, manifest.webmanifest -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#c0392b">
+<meta name="application-name" content="Safety APP">
+<meta name="apple-mobile-web-app-title" content="Safety APP">
+
+<!-- ทางเลือก: ใช้อีโมจิเป็นไอคอนที่แถบเบราว์เซอร์ (ไม่ต้องมีไฟล์รูป)
+     ถ้าต้องการใช้ ให้ลบ 2 บรรทัด <link rel="icon"> ด้านบน แล้วเอาคอมเมนต์บรรทัดล่างนี้ออก
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧯%3C/text%3E%3C/svg%3E">
+-->
 </head>
 <body style="margin:0;">
 <!-- URL เว็บแอป Google Apps Script จริง (Deploy > Manage deployments > คัดลอก "Web app" URL ต้องลงท้าย /exec) -->
@@ -14,11 +30,8 @@
 
   /* หน้านี้คือ "หน้ากลาง" บน GitHub Pages (https://qtcsafety.github.io/Fire-fighting/)
    * เมื่อผู้ใช้สแกน QR เสร็จที่ scanner.html แล้วเบราว์เซอร์จะพากลับมาที่หน้านี้พร้อม
-   * ?scanTag=TAG ต่อท้าย (ดู WEBAPP_URL ใน Index.html ของ Code.gs) — สคริปต์นี้จะอ่านค่า
-   * scanTag จาก URL ของหน้าตัวเอง แล้วต่อเข้าไปใน src ของ iframe ที่ชี้ไปเว็บแอป Apps
-   * Script จริง ให้ doGet(e) ฝั่งเซิร์ฟเวอร์อ่าน e.parameter.scanTag ได้ตามปกติ
-   * (ถ้าไม่ทำแบบนี้ ค่า ?scanTag=... จะค้างอยู่ที่ URL ของ GitHub Pages เฉย ๆ
-   * ไม่ถูกส่งต่อเข้า iframe เลย) */
+   * ?scanTag=TAG ต่อท้าย — สคริปต์นี้อ่านค่า scanTag จาก URL ของหน้าตัวเอง
+   * แล้วต่อเข้าไปใน src ของ iframe ที่ชี้ไปเว็บแอป Apps Script จริง */
   var params = new URLSearchParams(location.search);
   var scanTag = params.get('scanTag');
   var iframeSrc = APPS_SCRIPT_URL + (scanTag ? '?scanTag=' + encodeURIComponent(scanTag) : '');
